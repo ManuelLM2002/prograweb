@@ -50,25 +50,26 @@ color: #999;
 }
 
 .login {
-border: none;
-width: 100%;
-color: orange;
-font-size: 20px;
-background: #1A2537;
-padding: 3px 200px;
-border-radius: 5px;
-cursor: pointer;
+    border: none;
+    width: 100%;
+    color: white;
+    font-size: 20px;
+    background: #1A2537;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
+
 .registro {
-border: none;
-width: 100%;
-color: orange;
-font-size: 20px;
-background: #1A2537;
-padding: 3px 200px;
-border-radius: 5px;
-cursor: pointer;
+    border: none;
+    width: 100%;
+    color: white;
+    font-size: 20px;
+    background: #1A2537;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .button:hover {
