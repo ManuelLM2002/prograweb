@@ -1,85 +1,167 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio - Clínica San Rafael</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <h1>Clínica San Rafael</h1>
-        <p>Portal del Paciente</p>
-    </header>
 
-    <nav>
-        <ul>
-            <li><a href="inicio.html">Inicio</a></li>
-            <li><a href="panel.html">Agendar Cita</a></li>
-            <li><a href="citas.html">Mis Citas</a></li>
-            <li><a href="login.html">Cerrar Sesión</a></li>
-        </ul>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+
+            <a class="navbar-brand" href="#">Clínica San Rafael</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="inicio.html">Inicio</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="panel.html">Agendar Cita</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="citas.html">Mis Citas</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Cerrar Sesión</a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
     </nav>
 
-    <main class="container">
 
-        <section class="main-content">
+    <!-- CONTENIDO -->
+    <div class="container mt-4">
 
-            <article>
-                <h2>Bienvenido, Manuel de Jesús</h2>
-                <p>Te damos la bienvenida al portal del paciente de nuestra Clínica San Rafael.</p>
-            </article>
+        <div class="row">
 
-            <article>
-                <h2>Resumen</h2>
-                <p>Aquí verás las opciones disponibles para tí en una forma más resumida, podrás consultar tus citas que se encuentren activas, así como agendar una cita con nuestros diferentes especialistas.</p>
-            </article>
+            <!-- CONTENIDO PRINCIPAL -->
+            <div class="col-lg-8">
 
-            <article>
-                <h2>Mis Citas</h2>
+                <div class="card mb-4">
+                    <div class="card-body">
 
-                <table border="1" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Especialidad</th>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Medicina General</td>
-                            <td>20/05/2024</td>
-                            <td>10:00 AM</td>
-                            <td>Confirmada</td>
-                        </tr>
-                        <tr>
-                            <td>Dermatología</td>
-                            <td>25/05/2024</td>
-                            <td>12:00 PM</td>
-                            <td>Pendiente</td>
-                        </tr>
-                    </tbody>
-                </table>
+                        <h2 class="card-title">Bienvenido, Manuel de Jesús</h2>
+                        <p>Te damos la bienvenida al portal del paciente de nuestra Clínica San Rafael.</p>
 
-            </article>
+                    </div>
+                </div>
 
-        </section>
 
-        <aside>
-            <h3>Información</h3>
-            <p>Recuerda llegar 15 minutos antes de tu cita.</p>
+                <div class="card mb-4">
+                    <div class="card-body">
 
-            <h3>Contacto</h3>
-            <p>Tel: (555) 123-4567</p>
-            <p>Email: contacto@clinica.com</p>
-        </aside>
+                        <h2 class="card-title">Resumen</h2>
 
-    </main>
+                        <p>
+                            Aquí podrás consultar tus citas activas y agendar nuevas citas con nuestros
+                            diferentes especialistas.
+                        </p>
 
-    <footer>
-        <p>&copy; 2026 - Clínica San Rafael - Proyecto HTML5</p>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <h2 class="card-title">Mis Citas</h2>
+
+                        <table class="table table-striped">
+
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Especialidad</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td>Medicina General</td>
+                                    <td>20/05/2024</td>
+                                    <td>10:00 AM</td>
+                                    <td>Confirmada</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Dermatología</td>
+                                    <td>25/05/2024</td>
+                                    <td>12:00 PM</td>
+                                    <td>Pendiente</td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- ASIDE -->
+            <div class="col-lg-4">
+
+                <div class="card mb-3">
+                    <div class="card-body">
+
+                        <h4>Información</h4>
+                        <p>Recuerda llegar 15 minutos antes de tu cita.</p>
+
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4>Contacto</h4>
+                        <p>Tel: (555) 123-4567</p>
+                        <p>Email: contacto@clinica.com</p>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer class="bg-dark text-white text-center p-3 mt-4">
+        <p class="mb-0">© 2026 - Clínica San Rafael - Proyecto HTML5</p>
     </footer>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+
 </html>
