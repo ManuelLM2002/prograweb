@@ -19,7 +19,7 @@
                     <li class="nav-item"><a class="nav-link" href="inicio.html">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="panel.html">Agendar Cita</a></li>
                     <li class="nav-item"><a class="nav-link" href="citas.html">Mis Citas</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="pagos.html">Pagos</a></li>
+                    
                     <li class="nav-item"><a class="nav-link" href="galeria.html">Galería</a></li>
                     <li class="nav-item"><a class="nav-link text-danger" href="login.html">Cerrar Sesión</a></li>
                 </ul>
@@ -32,57 +32,83 @@
             <div class="col-12 col-md-8 col-lg-6">
                 
                 <div class="card shadow border-0 rounded-4">
-                    <div class="card-header bg-primary text-white text-center py-3 rounded-top-4">
+                    <div class="card-header bg-primary text-white text-center py-3">
                         <h4 class="mb-0 fw-bold">Pago de Consulta</h4>
                     </div>
                     
-                    <div class="card-body p-4 p-md-5">
-                        <div class="alert alert-info text-center mb-4 shadow-sm">
-                            Total a pagar: <strong class="fs-4 d-block mt-1">$500.00 MXN</strong>
+                    <div class="card-body p-4">
+
+                        <div class="alert alert-info text-center mb-4">
+                            Total a pagar: <strong class="fs-4 d-block">$500.00 MXN</strong>
                         </div>
 
                         <form id="form-pago">
+
+                            <!-- NOMBRE -->
                             <div class="mb-3">
-                                <label class="form-label text-muted small text-uppercase fw-bold">Nombre en la tarjeta</label>
-                                <input type="text" class="form-control form-control-lg bg-light" placeholder="Ej. Manuel de Jesús" required>
+                                <label class="form-label fw-bold">Nombre en la tarjeta</label>
+                                <input id="nombre" type="text" class="form-control" placeholder="Ej. Manuel de Jesús" required>
+                                <div class="text-danger small" id="error-nombre"></div>
                             </div>
 
+                            <!-- TARJETA -->
                             <div class="mb-3">
-                                <label class="form-label text-muted small text-uppercase fw-bold">Número de tarjeta</label>
-                                <input type="text" class="form-control form-control-lg bg-light" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                                <label class="form-label fw-bold">Número de tarjeta</label>
+                                <input id="tarjeta" type="text" class="form-control" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                                <div class="text-danger small" id="error-tarjeta"></div>
                             </div>
 
                             <div class="row">
-                                <div class="col-6 mb-4">
-                                    <label class="form-label text-muted small text-uppercase fw-bold">Vencimiento</label>
-                                    <input type="text" class="form-control form-control-lg bg-light" placeholder="MM/AA" maxlength="5" required>
+                                <!-- VENCIMIENTO -->
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold">Vencimiento</label>
+                                    <input type="text" class="form-control" placeholder="MM/AA" maxlength="5" required>
                                 </div>
-                                <div class="col-6 mb-4">
-                                    <label class="form-label text-muted small text-uppercase fw-bold">CVV</label>
-                                    <input type="password" class="form-control form-control-lg bg-light" placeholder="123" maxlength="4" required>
+
+                                <!-- CVV -->
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold">CVV</label>
+                                    <input id="cvv" type="password" class="form-control" placeholder="123" maxlength="4" required>
+                                    <div class="text-danger small" id="error-cvv"></div>
                                 </div>
                             </div>
 
-                            <button type="submit" id="btn-pagar" class="btn btn-success btn-lg w-100 shadow fw-bold">
+                            <button type="submit" class="btn btn-success w-100">
                                 Confirmar Pago
                             </button>
+
                         </form>
                     </div>
-                </div>
-
-                <div class="text-center mt-4 text-muted small">
-                    <p>🔒 Pago 100% seguro y encriptado.</p>
                 </div>
 
             </div>
         </div>
     </div>
 
-    <footer class="bg-dark text-white text-center py-4 mt-5">
-        <p class="mb-0">© 2026 - Clínica San Rafael - Proyecto HTML5 & Bootstrap</p>
+    
+    <div class="modal fade" id="modalConfirmar" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Confirmar Pago</h5>
+                </div>
+                <div class="modal-body text-center">
+                    ¿Estás seguro de realizar el pago?
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success" id="btn-confirmar-pago">Sí, pagar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p class="mb-0">© 2026 - Clínica San Rafael</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
+
 </body>
 </html>
