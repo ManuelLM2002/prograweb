@@ -137,4 +137,35 @@ if (rutaActual.includes('pagos.html')) {
         });
     }
 
- 
+    // MODAL
+    const modal = new bootstrap.Modal(document.getElementById('modalConfirmar'));
+
+    if (formPago) {
+        formPago.addEventListener("submit", function(e){
+            e.preventDefault();
+            modal.show();
+        });
+    }
+
+    const btnConfirmar = document.getElementById("btn-confirmar-pago");
+
+    if (btnConfirmar) {
+        btnConfirmar.addEventListener("click", function(){
+
+            const citaTemp = JSON.parse(localStorage.getItem('cita_temp'));
+            if (!citaTemp) return;
+
+            const citas = obtenerCitas();
+            citaTemp.estado = "Confirmada";
+
+            citas.push(citaTemp);
+            guardarCitas(citas);
+
+            localStorage.removeItem('cita_temp');
+
+            modal.hide();
+
+            window.location.href = "citas.html";
+        });
+    }
+}
