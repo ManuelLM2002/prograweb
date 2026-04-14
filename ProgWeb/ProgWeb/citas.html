@@ -99,7 +99,7 @@
     // 📥 cargar citas
     async function cargarCitas() {
         try {
-            const res = await fetch("http://localhost:3000/mis-citas/" + correo);
+            const res = await fetch("http://192.168.0.10:3000/mis-citas/" + correo);
             const citas = await res.json();
 
             const tabla = document.getElementById("tabla-citas-body");
@@ -141,7 +141,7 @@
     async function eliminarCita(id) {
         if (!confirm("¿Cancelar esta cita?")) return;
 
-        await fetch("http://localhost:3000/citas/" + id, {
+        await fetch("http://192.168.0.10:3000/citas/" + id, {
             method: "DELETE"
         });
 

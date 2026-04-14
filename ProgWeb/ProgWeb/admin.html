@@ -82,7 +82,7 @@ function logout() {
 // 📅 CITAS
 // =========================
 async function cargarCitas() {
-    const res = await fetch("http://localhost:3000/citas");
+    const res = await fetch("http://192.168.0.10:3000/citas");
     const data = await res.json();
 
     const tabla = document.getElementById("tablaCitas");
@@ -106,7 +106,7 @@ async function cargarCitas() {
 }
 
 async function eliminarCita(id) {
-    await fetch("http://localhost:3000/citas/" + id, {
+    await fetch("http://192.168.0.10:3000/citas/" + id, {
         method: "DELETE"
     });
     cargarCitas();
@@ -116,7 +116,7 @@ async function eliminarCita(id) {
 // 👤 USUARIOS
 // =========================
 async function cargarUsuarios() {
-    const res = await fetch("http://localhost:3000/usuarios");
+    const res = await fetch("http://192.168.0.10:3000/usuarios");
     const data = await res.json();
 
     const tabla = document.getElementById("tablaUsuarios");
@@ -146,7 +146,7 @@ async function cargarUsuarios() {
 async function cambiarRol(id, rolActual) {
     const nuevoRol = rolActual === "Admin" ? "Usuario" : "Admin";
 
-    await fetch("http://localhost:3000/usuarios/" + id, {
+    await fetch("http://192.168.0.10:3000/usuarios/" + id, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ rol: nuevoRol })
@@ -159,7 +159,7 @@ async function cambiarRol(id, rolActual) {
 async function eliminarUsuario(id) {
     if (!confirm("¿Eliminar usuario?")) return;
 
-    await fetch("http://localhost:3000/usuarios/" + id, {
+    await fetch("http://192.168.0.10:3000/usuarios/" + id, {
         method: "DELETE"
     });
 
