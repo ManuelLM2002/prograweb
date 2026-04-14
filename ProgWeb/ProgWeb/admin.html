@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <span class="navbar-brand">Panel Admin</span>
+        <button class="btn btn-danger" onclick="logout()">Cerrar Sesión</button>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <h3>Bienvenido: <span id="nombreAdmin"></span></h3>
+
+    <!-- ================= CITAS ================= -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>Citas</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Especialidad</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Usuario</th>
+                        <th>Estado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tablaCitas"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= USUARIOS ================= -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>Usuarios</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Correo</th>
+                        <th>Nombre</th>
+                        <th>Rol</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tablaUsuarios"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// 🔒 PROTECCIÓN
+const rol = localStorage.getItem("rol");
+if (rol !== "Admin") {
+    alert("No eres admin");
+    window.location.href = "login.html";
+}
+
+// 👤 nombre
+document.getElementById("nombreAdmin").textContent = localStorage.getItem("user");
+
+// 🚪 logout
+function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+}
+
+// =========================
+// 📅 CITAS
+// =========================
+async function cargarCitas() {
+    const res = await fetch("http://localhost:3000/citas");
+    const data = await res.json();
+
+    const tabla = document.getElementById("tablaCitas");
+    tabla.innerHTML = "";
+
+    data.forEach(c => {
+        tabla.innerHTML += `
+            <tr>
+                <td>${c.id}</td>
+                <td>${c.especialidad}</td>
+                <td>${c.fecha}</td>
+                <td>${c.hora}</td>
+                <td>${c.usuario}</td>
+                <td>${c.estado}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarCita(${c.id})">X</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+async function eliminarCita(id) {
+    await fetch("http://localhost:3000/citas/" + id, {
+        method: "DELETE"
+    });
+    cargarCitas();
+}
+
+// =========================
+// 👤 USUARIOS
+// =========================
+async function cargarUsuarios() {
+    const res = await fetch("http://localhost:3000/usuarios");
+    const data = await res.json();
+
+    const tabla = document.getElementById("tablaUsuarios");
+    tabla.innerHTML = "";
+
+    data.forEach(u => {
+        tabla.innerHTML += `
+            <tr>
+                <td>${u.id}</td>
+                <td>${u.username}</td>
+                <td>${u.nombre}</td>
+                <td>${u.rol}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="cambiarRol(${u.id}, '${u.rol}')">
+                        Cambiar Rol
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarUsuario(${u.id})">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+// 🔄 cambiar rol
+async function cambiarRol(id, rolActual) {
+    const nuevoRol = rolActual === "Admin" ? "Usuario" : "Admin";
+
+    await fetch("http://localhost:3000/usuarios/" + id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rol: nuevoRol })
+    });
+
+    cargarUsuarios();
+}
+
+// ❌ eliminar usuario
+async function eliminarUsuario(id) {
+    if (!confirm("¿Eliminar usuario?")) return;
+
+    await fetch("http://localhost:3000/usuarios/" + id, {
+        method: "DELETE"
+    });
+
+    cargarUsuarios();
+}
+
+// 🚀 iniciar
+cargarCitas();
+cargarUsuarios();
+</script>
+
+</body>
+</html>

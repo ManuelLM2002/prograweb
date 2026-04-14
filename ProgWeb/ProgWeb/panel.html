@@ -11,101 +11,151 @@
 
 <body class="bg-light">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="inicio.html">Clínica San Rafael</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="menu">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="inicio.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="panel.html">Agendar Cita</a></li>
-                    <li class="nav-item"><a class="nav-link" href="citas.html">Mis Citas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="galeria.html">Galería</a></li>
-                    <li class="nav-item"><a class="nav-link text-danger" href="login.html">Cerrar Sesión</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="inicio.html">Clínica San Rafael</a>
 
-    <div class="container mt-4">
-        <div class="row">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div class="col-lg-8">
-                <div class="card mb-4 shadow-sm border-0">
-                    <div class="card-body">
-                        <h2 class="card-title">Bienvenido, Manuel de Jesús</h2>
-                        <p class="text-muted">Aquí puedes gestionar tus citas médicas.</p>
-                    </div>
-                </div>
-
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h3 class="card-title mb-4">Agendar Nueva Cita</h3>
-
-                        <form id="form-agendar">
-
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Especialidad</label>
-                                <select class="form-select form-select-lg" id="especialidad" required>
-                                    <option value="" disabled selected>Selecciona una opción...</option>
-                                    <option value="Medicina General">Medicina General</option>
-                                    <option value="Pediatría">Pediatría</option>
-                                    <option value="Cardiología">Cardiología</option>
-                                    <option value="Dermatología">Dermatología</option>
-                                </select>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Fecha</label>
-                                    <input type="date" class="form-control form-control-lg" id="fecha" required>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Hora</label>
-                                    <input type="time" class="form-control form-control-lg" id="hora" required>
-                                </div>
-                            </div>
-
-                            <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm mt-3">Solicitar
-                                Cita</button>
-
-                        </form>
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 mt-4 mt-lg-0">
-                <div class="card mb-3 shadow-sm border-0 bg-primary text-white">
-                    <div class="card-body text-center">
-                        <h4 class="fw-bold">Información</h4>
-                        <p class="mb-0">Recuerda llegar 15 minutos antes de tu cita para registro.</p>
-                    </div>
-                </div>
-
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h4 class="fw-bold text-primary">Contacto</h4>
-                        <p class="mb-1"><strong>Tel:</strong> (555) 123-4567</p>
-                        <p class="mb-0"><strong>Email:</strong> contacto@clinica.com</p>
-                    </div>
-                </div>
-            </div>
-
+        <div class="collapse navbar-collapse" id="menu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="inicio.html">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link active" href="panel.html">Agendar Cita</a></li>
+                <li class="nav-item"><a class="nav-link" href="citas.html">Mis Citas</a></li>
+                <li class="nav-item"><a class="nav-link" href="galeria.html">Galería</a></li>
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="#" onclick="logout()">Cerrar Sesión</a>
+                </li>
+            </ul>
         </div>
     </div>
+</nav>
 
-    <footer class="bg-dark text-white text-center py-4 mt-5">
-        <p class="mb-0">© 2026 - Clínica San Rafael - Proyecto HTML5 & Bootstrap</p>
-    </footer>
+<div class="container mt-4">
+    <div class="row">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <div class="col-lg-8">
 
-    <script src="app.js"></script>
+            <!-- BIENVENIDA -->
+            <div class="card mb-4 shadow-sm border-0">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        Bienvenido, <span id="nombreUsuario"></span>
+                    </h2>
+                    <p class="text-muted">Aquí puedes gestionar tus citas médicas.</p>
+                </div>
+            </div>
+
+            <!-- FORM -->
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">Agendar Nueva Cita</h3>
+
+                    <form id="form-agendar">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Especialidad</label>
+                            <select class="form-select form-select-lg" id="especialidad" required>
+                                <option value="" disabled selected>Selecciona una opción...</option>
+                                <option value="Medicina General">Medicina General</option>
+                                <option value="Pediatría">Pediatría</option>
+                                <option value="Cardiología">Cardiología</option>
+                                <option value="Dermatología">Dermatología</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Fecha</label>
+                                <input type="date" class="form-control form-control-lg" id="fecha" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Hora</label>
+                                <input type="time" class="form-control form-control-lg" id="hora" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm mt-3">
+                            Ir a pagar 💳
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- INFO -->
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card mb-3 shadow-sm border-0 bg-primary text-white">
+                <div class="card-body text-center">
+                    <h4 class="fw-bold">Información</h4>
+                    <p class="mb-0">Recuerda llegar 15 minutos antes de tu cita para registro.</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h4 class="fw-bold text-primary">Contacto</h4>
+                    <p class="mb-1"><strong>Tel:</strong> (555) 123-4567</p>
+                    <p class="mb-0"><strong>Email:</strong> contacto@clinica.com</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer class="bg-dark text-white text-center py-4 mt-5">
+    <p class="mb-0">© 2026 - Clínica San Rafael</p>
+</footer>
+
+<script>
+    // 🔒 sesión
+    const nombre = localStorage.getItem("user");
+    const correo = localStorage.getItem("correo");
+
+    if (!nombre || !correo) {
+        alert("Debes iniciar sesión");
+        window.location.href = "login.html";
+    }
+
+    // 👤 mostrar nombre
+    document.getElementById("nombreUsuario").textContent = nombre;
+
+    // 🚪 logout
+    function logout() {
+        localStorage.clear();
+        window.location.href = "login.html";
+    }
+
+    // 🔥 NUEVO FLUJO CORRECTO
+    document.getElementById("form-agendar").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const especialidad = document.getElementById("especialidad").value;
+        const fecha = document.getElementById("fecha").value;
+        const hora = document.getElementById("hora").value;
+
+        const citaTemp = {
+            especialidad,
+            fecha,
+            hora,
+            usuario: correo
+        };
+
+        // guardar temporal
+        localStorage.setItem("cita_temp", JSON.stringify(citaTemp));
+
+        // ir a pagos
+        window.location.href = "pagos.html";
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>
