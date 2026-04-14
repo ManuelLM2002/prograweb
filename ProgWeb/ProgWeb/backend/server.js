@@ -1,10 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-const fs = require("fs"); // 👈 MOVER ARRIBA
+const fs = require("fs");
 
+const app = express(); // 👈 PRIMERO se crea
+
+// 👇 DESPUÉS se usa
 app.use('/prograweb/ProgWeb/ProgWeb', express.static('/var/www/html/prograweb/ProgWeb/ProgWeb'));
 
-const app = express();
 app.use(cors());
 app.use(express.json());
 
