@@ -46,28 +46,59 @@ app.post("/login", (req, res) => {
         res.json({
             username: user.username,
             nombre: user.nombre,
-            rol: user.rol || "Usuario" // 🔥 evita null
+            rol: user.rol || "Usuario"
         });
     });
 });
 
 // =========================
-// REGISTRO
+// REGISTRO (ARREGLADO)
 // =========================
 app.post("/registro", (req, res) => {
     const { username, password, nombre } = req.body;
 
     const nuevo = {
-        id: Date.now(),
         username,
         password,
         nombre,
         rol: "Usuario"
     };
 
-    db.query("INSERT INTO usuarios SET ?", nuevo, (err) => {
+    db.query("INSERT INTO usuarios SET ?", nuevo, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json(err);
+        }
+
+        res.json({
+            message: "Usuario creado",
+            id: result.insertId,
+            ...nuevo
+        });
+    });
+});
+
+// =========================
+// CREAR USUARIO DESDE ADMIN (NUEVO Y CORRECTO)
+// =========================
+app.post("/usuarios", (req, res) => {
+    const { username, password, nombre, rol } = req.body;
+
+    const nuevo = {
+        username,
+        password,
+        nombre,
+        rol: rol || "Usuario"
+    };
+
+    db.query("INSERT INTO usuarios SET ?", nuevo, (err, result) => {
         if (err) return res.status(500).json(err);
-        res.json(nuevo);
+
+        res.json({
+            message: "Usuario creado",
+            id: result.insertId,
+            ...nuevo
+        });
     });
 });
 
