@@ -189,5 +189,5 @@ app.get("/exportar-citas", (req, res) => {
 // SERVIDOR
 // =========================
 app.listen(3000, "0.0.0.0", () => {
-    console.log("Servidor en http://192.168.0.10:3000");
+    console.log("Servidor en http://localhost:3000");
 });
