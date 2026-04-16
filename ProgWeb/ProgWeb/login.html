@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
@@ -19,46 +18,47 @@
 
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
 
-```
-<div class="card shadow-lg border-0 rounded-4" style="width: 100%; max-width: 450px;">
-    <div class="card-body p-5">
+    <div class="card shadow-lg border-0 rounded-4" style="width: 100%; max-width: 450px;">
+        <div class="card-body p-5">
 
-        <h3 class="text-center mb-4 fw-bold text-primary">Iniciar Sesión</h3>
+            <h3 class="text-center mb-4 fw-bold text-primary">Iniciar Sesión</h3>
 
-        <form onsubmit="login(event)">
-            <div class="mb-3">
-                <label class="form-label text-muted fw-bold">Correo Electrónico</label>
-                <input type="email" id="username" class="form-control form-control-lg bg-light"
-                    placeholder="usuario@correo.com" required>
-            </div>
+            <form onsubmit="login(event)">
+                <div class="mb-3">
+                    <label class="form-label text-muted fw-bold">Correo Electrónico</label>
+                    <input type="email" id="username" class="form-control form-control-lg bg-light"
+                        placeholder="usuario@correo.com" required>
+                </div>
 
-            <div class="mb-4">
-                <label class="form-label text-muted fw-bold">Contraseña</label>
-                <input type="password" id="password" class="form-control form-control-lg bg-light"
-                    placeholder="••••••••" required>
-            </div>
+                <div class="mb-4">
+                    <label class="form-label text-muted fw-bold">Contraseña</label>
+                    <input type="password" id="password" class="form-control form-control-lg bg-light"
+                        placeholder="••••••••" required>
+                </div>
 
-            <div class="d-grid mb-4">
-                <button type="submit" class="btn btn-primary btn-lg shadow-sm">Entrar</button>
-            </div>
+                <div class="d-grid mb-4">
+                    <button type="submit" class="btn btn-primary btn-lg shadow-sm">Entrar</button>
+                </div>
 
-            <hr>
+                <hr>
 
-            <p class="text-center mb-0 text-muted">
-                ¿No tienes una cuenta? 
-                <a href="registro.html" class="fw-bold text-decoration-none">Regístrate aquí</a>
-            </p>
-        </form>
+                <p class="text-center mb-0 text-muted">
+                    ¿No tienes una cuenta? 
+                    <a href="registro.html" class="fw-bold text-decoration-none">Regístrate aquí</a>
+                </p>
+            </form>
 
+        </div>
     </div>
-</div>
-```
 
 </div>
 
 <script>
 async function login(e) {
     e.preventDefault();
+
+    // 🔥 limpiar sesión previa (evita bugs)
+    localStorage.clear();
 
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
@@ -76,12 +76,10 @@ async function login(e) {
 
         if (res.ok) {
 
-            // Guardar datos correctamente
             localStorage.setItem("rol", data.rol);
             localStorage.setItem("user", data.nombre);
             localStorage.setItem("correo", data.username);
 
-            // ⚠️ VALIDACIÓN EXTRA POR SI EL ROL VIENE VACÍO
             if (!data.rol) {
                 alert("Tu usuario no tiene rol asignado");
                 return;
