@@ -77,13 +77,13 @@
         const password = document.getElementById("password").value;
 
         try {
-            const res = await fetch("http://192.168.0.10:3000/registro", {
+            const res = await fetch("http://localhost:3000/registro", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    username: correo, // 👈 correo = usuario único
+                    username: correo, // correo = usuario único
                     password: password,
                     nombre: nombre
                 })

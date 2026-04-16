@@ -90,16 +90,16 @@
         window.location.href = "login.html";
     }
 
-    // 🚪 logout
+    // logout
     function logout() {
         localStorage.clear();
         window.location.href = "login.html";
     }
 
-    // 📥 cargar citas
+    //  cargar citas
     async function cargarCitas() {
         try {
-            const res = await fetch("http://192.168.0.10:3000/mis-citas/" + correo);
+            const res = await fetch("http://localhost:3000/mis-citas/" + correo);
             const citas = await res.json();
 
             const tabla = document.getElementById("tabla-citas-body");
@@ -137,18 +137,18 @@
         }
     }
 
-    // ❌ eliminar cita
+    // eliminar cita
     async function eliminarCita(id) {
         if (!confirm("¿Cancelar esta cita?")) return;
 
-        await fetch("http://192.168.0.10:3000/citas/" + id, {
+        await fetch("http://localhost:3000/citas/" + id, {
             method: "DELETE"
         });
 
         cargarCitas();
     }
 
-    // 🚀 iniciar
+    //  iniciar
     cargarCitas();
 </script>
 

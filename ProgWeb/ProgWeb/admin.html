@@ -44,6 +44,15 @@
     <div class="card mt-4">
         <div class="card-body">
             <h4>Usuarios</h4>
+
+            <!-- CREAR USUARIO -->
+            <div class="mb-3">
+                <input id="nuevoNombre" class="form-control mb-2" placeholder="Nombre">
+                <input id="nuevoCorreo" class="form-control mb-2" placeholder="Correo">
+                <input id="nuevoPass" class="form-control mb-2" placeholder="Contraseña">
+                <button class="btn btn-success" onclick="crearUsuario()">Crear Usuario</button>
+            </div>
+
             <table class="table">
                 <thead>
                     <tr>
@@ -62,27 +71,24 @@
 </div>
 
 <script>
+const API = "http://localhost:3000";;
+
 // 🔒 PROTECCIÓN
-const rol = localStorage.getItem("rol");
-if (rol !== "Admin") {
+if (localStorage.getItem("rol") !== "Admin") {
     alert("No eres admin");
     window.location.href = "login.html";
 }
 
-// 👤 nombre
 document.getElementById("nombreAdmin").textContent = localStorage.getItem("user");
 
-// 🚪 logout
 function logout() {
     localStorage.clear();
     window.location.href = "login.html";
 }
 
-// =========================
-// 📅 CITAS
-// =========================
+// ================= CITAS =================
 async function cargarCitas() {
-    const res = await fetch("http://192.168.0.10:3000/citas");
+    const res = await fetch(API + "/citas");
     const data = await res.json();
 
     const tabla = document.getElementById("tablaCitas");
@@ -106,17 +112,13 @@ async function cargarCitas() {
 }
 
 async function eliminarCita(id) {
-    await fetch("http://192.168.0.10:3000/citas/" + id, {
-        method: "DELETE"
-    });
+    await fetch(API + "/citas/" + id, { method: "DELETE" });
     cargarCitas();
 }
 
-// =========================
-// 👤 USUARIOS
-// =========================
+// ================= USUARIOS =================
 async function cargarUsuarios() {
-    const res = await fetch("http://192.168.0.10:3000/usuarios");
+    const res = await fetch(API + "/usuarios");
     const data = await res.json();
 
     const tabla = document.getElementById("tablaUsuarios");
@@ -126,47 +128,68 @@ async function cargarUsuarios() {
         tabla.innerHTML += `
             <tr>
                 <td>${u.id}</td>
-                <td>${u.username}</td>
-                <td>${u.nombre}</td>
+                <td><input value="${u.username}" id="correo-${u.id}" class="form-control"></td>
+                <td><input value="${u.nombre}" id="nombre-${u.id}" class="form-control"></td>
                 <td>${u.rol}</td>
                 <td>
-                    <button class="btn btn-warning btn-sm" onclick="cambiarRol(${u.id}, '${u.rol}')">
-                        Cambiar Rol
-                    </button>
-                    <button class="btn btn-danger btn-sm" onclick="eliminarUsuario(${u.id})">
-                        Eliminar
-                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="editarUsuario(${u.id})">Guardar</button>
+                    <button class="btn btn-warning btn-sm" onclick="cambiarRol(${u.id}, '${u.rol}')">Rol</button>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarUsuario(${u.id})">X</button>
                 </td>
             </tr>
         `;
     });
 }
 
-// 🔄 cambiar rol
+// CREAR
+async function crearUsuario() {
+    const nombre = document.getElementById("nuevoNombre").value;
+    const username = document.getElementById("nuevoCorreo").value;
+    const password = document.getElementById("nuevoPass").value;
+
+    await fetch(API + "/registro", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ nombre, username, password })
+    });
+
+    cargarUsuarios();
+}
+
+// EDITAR
+async function editarUsuario(id) {
+    const nombre = document.getElementById("nombre-" + id).value;
+    const username = document.getElementById("correo-" + id).value;
+
+    await fetch(API + "/usuarios/" + id, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ nombre, username })
+    });
+
+    cargarUsuarios();
+}
+
+// CAMBIAR ROL
 async function cambiarRol(id, rolActual) {
     const nuevoRol = rolActual === "Admin" ? "Usuario" : "Admin";
 
-    await fetch("http://192.168.0.10:3000/usuarios/" + id, {
+    await fetch(API + "/usuarios/" + id, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ rol: nuevoRol })
     });
 
     cargarUsuarios();
 }
 
-// ❌ eliminar usuario
+// ELIMINAR
 async function eliminarUsuario(id) {
-    if (!confirm("¿Eliminar usuario?")) return;
-
-    await fetch("http://192.168.0.10:3000/usuarios/" + id, {
-        method: "DELETE"
-    });
-
+    await fetch(API + "/usuarios/" + id, { method: "DELETE" });
     cargarUsuarios();
 }
 
-// 🚀 iniciar
+// INIT
 cargarCitas();
 cargarUsuarios();
 </script>

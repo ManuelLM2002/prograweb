@@ -11,99 +11,100 @@
 
 <body class="bg-light">
 
-    <nav class="navbar navbar-dark bg-primary shadow-sm">
-        <div class="container justify-content-center">
-            <span class="navbar-brand fw-bold fs-3">Clínica San Rafael</span>
-        </div>
-    </nav>
+<nav class="navbar navbar-dark bg-primary shadow-sm">
+    <div class="container justify-content-center">
+        <span class="navbar-brand fw-bold fs-3">Clínica San Rafael</span>
+    </div>
+</nav>
 
-    <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
 
-        ```
-        <div class="card shadow-lg border-0 rounded-4" style="width: 100%; max-width: 450px;">
-            <div class="card-body p-5">
+```
+<div class="card shadow-lg border-0 rounded-4" style="width: 100%; max-width: 450px;">
+    <div class="card-body p-5">
 
-                <h3 class="text-center mb-4 fw-bold text-primary">Iniciar Sesión</h3>
+        <h3 class="text-center mb-4 fw-bold text-primary">Iniciar Sesión</h3>
 
-                <form onsubmit="login(event)">
-                    <div class="mb-3">
-                        <label class="form-label text-muted fw-bold">Correo Electrónico</label>
-                        <input type="email" id="username" class="form-control form-control-lg bg-light"
-                            placeholder="usuario@correo.com" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label text-muted fw-bold">Contraseña</label>
-                        <input type="password" id="password" class="form-control form-control-lg bg-light"
-                            placeholder="••••••••" required>
-                    </div>
-
-                    <div class="d-grid mb-4">
-                        <button type="submit" class="btn btn-primary btn-lg shadow-sm">Entrar</button>
-                    </div>
-
-                    <p class="mt-3 text-center text-muted small">
-                        Al iniciar sesión aceptas nuestras <a href="#" class="text-decoration-none">Condiciones de
-                            uso</a>
-                    </p>
-
-                    <hr>
-
-                    <p class="text-center mb-0 text-muted">
-                        ¿No tienes una cuenta? <a href="registro.html" class="fw-bold text-decoration-none">Regístrate
-                            aquí</a>
-                    </p>
-                </form>
-
+        <form onsubmit="login(event)">
+            <div class="mb-3">
+                <label class="form-label text-muted fw-bold">Correo Electrónico</label>
+                <input type="email" id="username" class="form-control form-control-lg bg-light"
+                    placeholder="usuario@correo.com" required>
             </div>
-        </div>
-        ```
+
+            <div class="mb-4">
+                <label class="form-label text-muted fw-bold">Contraseña</label>
+                <input type="password" id="password" class="form-control form-control-lg bg-light"
+                    placeholder="••••••••" required>
+            </div>
+
+            <div class="d-grid mb-4">
+                <button type="submit" class="btn btn-primary btn-lg shadow-sm">Entrar</button>
+            </div>
+
+            <hr>
+
+            <p class="text-center mb-0 text-muted">
+                ¿No tienes una cuenta? 
+                <a href="registro.html" class="fw-bold text-decoration-none">Regístrate aquí</a>
+            </p>
+        </form>
 
     </div>
+</div>
+```
 
-    <script>
-        async function login(e) {
-            e.preventDefault();
+</div>
 
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
+<script>
+async function login(e) {
+    e.preventDefault();
 
-            try {
-                const res = await fetch("http://192.168.0.10:3000/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ username, password })
-                });
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
 
-                if (res.ok) {
-                    const data = await res.json();
+    try {
+        const res = await fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password })
+        });
 
-                    localStorage.setItem("rol", data.rol);
-                    localStorage.setItem("user", data.nombre);     // nombre para mostrar
-                    localStorage.setItem("correo", data.correo);   // correo correcto
+        const data = await res.json();
 
-                    // 🔁 redirección
-                    if (data.rol === "Admin") {
-                        window.location.href = "admin.html"; // 👈 mejor separar admin
-                    } else {
-                        window.location.href = "inicio.html";
-                    }
+        if (res.ok) {
 
-                } else {
-                    alert("Correo o contraseña incorrectos");
-                }
+            // Guardar datos correctamente
+            localStorage.setItem("rol", data.rol);
+            localStorage.setItem("user", data.nombre);
+            localStorage.setItem("correo", data.username);
 
-            } catch (error) {
-                console.error(error);
-                alert("Error al conectar con el servidor");
+            // ⚠️ VALIDACIÓN EXTRA POR SI EL ROL VIENE VACÍO
+            if (!data.rol) {
+                alert("Tu usuario no tiene rol asignado");
+                return;
             }
-        }
-    </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            if (data.rol === "Admin") {
+                window.location.href = "admin.html";
+            } else {
+                window.location.href = "inicio.html";
+            }
+
+        } else {
+            alert(data.message || "Correo o contraseña incorrectos");
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("Error al conectar con el servidor");
+    }
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>
