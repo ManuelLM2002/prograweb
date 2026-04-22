@@ -2,11 +2,22 @@ const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const mysql = require("mysql2");
+const path = require("path");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, '..')));
+
+app.get("/", (req, res) => {
+    res.render("login"); 
+});
+
+app.set('view engine', 'ejs');
+
+app.set('views', path.join(__dirname, '..'));
 
 // =========================
 // CONEXIÓN A MYSQL
