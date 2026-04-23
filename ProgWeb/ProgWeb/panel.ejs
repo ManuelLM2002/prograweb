@@ -13,7 +13,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="inicio.html">Clínica San Rafael</a>
+        <a class="navbar-brand fw-bold" href="/inicio">Clínica San Rafael</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
             <span class="navbar-toggler-icon"></span>
@@ -21,10 +21,10 @@
 
         <div class="collapse navbar-collapse" id="menu">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="inicio.html">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link active" href="panel.html">Agendar Cita</a></li>
-                <li class="nav-item"><a class="nav-link" href="citas.html">Mis Citas</a></li>
-                <li class="nav-item"><a class="nav-link" href="galeria.html">Galería</a></li>
+                <li class="nav-item"><a class="nav-link" href="/inicio">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/panel">Agendar Cita</a></li>
+                <li class="nav-item"><a class="nav-link" href="/citas">Mis Citas</a></li>
+                <li class="nav-item"><a class="nav-link" href="/galeria">Galería</a></li>
                 <li class="nav-item">
                     <a class="nav-link text-danger" href="#" onclick="logout()">Cerrar Sesión</a>
                 </li>
@@ -120,7 +120,7 @@
 
     if (!nombre || !correo) {
         alert("Debes iniciar sesión");
-        window.location.href = "login.html";
+        window.location.href = "/login";
     }
 
     // 👤 mostrar nombre
@@ -129,7 +129,7 @@
     // 🚪 logout
     function logout() {
         localStorage.clear();
-        window.location.href = "login.html";
+        window.location.href = "/login";
     }
 
     // 🔥 NUEVO FLUJO CORRECTO
@@ -151,7 +151,7 @@
         localStorage.setItem("cita_temp", JSON.stringify(citaTemp));
 
         // ir a pagos
-        window.location.href = "pagos.html";
+        window.location.href = "/pagos";
     });
 </script>
 

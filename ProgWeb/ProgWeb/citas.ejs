@@ -18,16 +18,16 @@
 ```
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="inicio.html">Clínica San Rafael</a>
+        <a class="navbar-brand fw-bold" href="/inicio">Clínica San Rafael</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="menu">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="inicio.html">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" href="panel.html">Agendar Cita</a></li>
-                <li class="nav-item"><a class="nav-link active" href="citas.html">Mis Citas</a></li>
-                <li class="nav-item"><a class="nav-link" href="galeria.html">Galería</a></li>
+                <li class="nav-item"><a class="nav-link" href="/inicio">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="/panel">Agendar Cita</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/citas">Mis Citas</a></li>
+                <li class="nav-item"><a class="nav-link" href="/galeria">Galería</a></li>
                 <li class="nav-item">
                     <a class="nav-link text-danger" href="#" onclick="logout()">Cerrar Sesión</a>
                 </li>
@@ -47,7 +47,7 @@
                         <h2 class="fw-bold mb-0">Mis Citas</h2>
                         <p class="text-muted mb-0">Aquí puedes ver y gestionar tus citas médicas.</p>
                     </div>
-                    <a href="panel.html" class="btn btn-primary shadow-sm">+ Nueva Cita</a>
+                    <a href="/panel" class="btn btn-primary shadow-sm">+ Nueva Cita</a>
                 </div>
             </div>
 
@@ -87,19 +87,19 @@
 
     // 🔒 validar sesión
     if (!correo) {
-        window.location.href = "login.html";
+        window.location.href = "/login";
     }
 
     // logout
     function logout() {
         localStorage.clear();
-        window.location.href = "login.html";
+        window.location.href = "/login";
     }
 
     //  cargar citas
     async function cargarCitas() {
         try {
-            const res = await fetch("http://localhost:3000/mis-citas/" + correo);
+            const res = await fetch("/mis-citas/" + correo);
             const citas = await res.json();
 
             const tabla = document.getElementById("tabla-citas-body");
@@ -141,7 +141,7 @@
     async function eliminarCita(id) {
         if (!confirm("¿Cancelar esta cita?")) return;
 
-        await fetch("http://localhost:3000/citas/" + id, {
+        await fetch("/citas/" + id, {
             method: "DELETE"
         });
 

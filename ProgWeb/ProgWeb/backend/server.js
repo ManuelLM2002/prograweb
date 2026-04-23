@@ -9,30 +9,29 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Archivos estáticos (html, css, js )
 app.use(express.static(path.join(__dirname, '..')));
 
-
-// CONFIGURACIÓN EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '..'));
 
-
-// VISTAS
+// =========================
+// RUTAS DE VISTAS FRONTEND (Agregadas)
+// =========================
 app.get("/", (req, res) => {
-    res.render("login");
+    res.render("login"); 
 });
+app.get("/inicio", (req, res) => res.render("inicio"));
+app.get("/login", (req, res) => res.render("login"));
+app.get("/registro", (req, res) => res.render("registro"));
+app.get("/panel", (req, res) => res.render("panel"));
+app.get("/citas", (req, res) => res.render("citas"));
+app.get("/galeria", (req, res) => res.render("galeria"));
+app.get("/pagos", (req, res) => res.render("pagos"));
+app.get("/admin", (req, res) => res.render("admin"));
 
-app.get("/admin", (req, res) => {
-    res.render("admin");
-});
-
-app.get("/inicio", (req, res) => {
-    res.render("inicio");
-});
-
-
+// =========================
 // CONEXIÓN A MYSQL
+// =========================
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -74,7 +73,7 @@ app.post("/login", (req, res) => {
 });
 
 // =========================
-// REGISTRO
+// REGISTRO 
 // =========================
 app.post("/registro", (req, res) => {
     const { username, password, nombre } = req.body;
@@ -87,7 +86,10 @@ app.post("/registro", (req, res) => {
     };
 
     db.query("INSERT INTO usuarios SET ?", nuevo, (err, result) => {
-        if (err) return res.status(500).json(err);
+        if (err) {
+            console.error(err);
+            return res.status(500).json(err);
+        }
 
         res.json({
             message: "Usuario creado",
@@ -98,7 +100,7 @@ app.post("/registro", (req, res) => {
 });
 
 // =========================
-// CREAR USUARIO
+// CREAR USUARIO DESDE ADMIN 
 // =========================
 app.post("/usuarios", (req, res) => {
     const { username, password, nombre, rol } = req.body;
@@ -122,7 +124,7 @@ app.post("/usuarios", (req, res) => {
 });
 
 // =========================
-// OBTENER USUARIOS
+// USUARIOS
 // =========================
 app.get("/usuarios", (req, res) => {
     db.query("SELECT * FROM usuarios", (err, result) => {
@@ -156,7 +158,7 @@ app.delete("/usuarios/:id", (req, res) => {
 });
 
 // =========================
-// CITAS
+// CITAS (GLOBALES)
 // =========================
 app.post("/citas", (req, res) => {
     const { especialidad, fecha, hora, usuario } = req.body;
@@ -183,6 +185,17 @@ app.get("/citas", (req, res) => {
     });
 });
 
+// =========================
+// MIS CITAS (POR USUARIO - Agregado)
+// =========================
+app.get("/mis-citas/:correo", (req, res) => {
+    const correo = req.params.correo;
+    db.query("SELECT * FROM citas WHERE usuario=?", [correo], (err, result) => {
+        if (err) return res.status(500).json(err);
+        res.json(result);
+    });
+});
+
 app.delete("/citas/:id", (req, res) => {
     const id = req.params.id;
 
@@ -193,7 +206,7 @@ app.delete("/citas/:id", (req, res) => {
 });
 
 // =========================
-// EXPORTAR CITAS
+// EXPORTAR
 // =========================
 app.get("/exportar-citas", (req, res) => {
     db.query("SELECT * FROM citas", (err, result) => {
