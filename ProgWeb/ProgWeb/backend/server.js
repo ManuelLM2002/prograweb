@@ -9,19 +9,30 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Archivos estáticos (html, css, js )
 app.use(express.static(path.join(__dirname, '..')));
 
-app.get("/", (req, res) => {
-    res.render("login"); 
-});
 
+// CONFIGURACIÓN EJS
 app.set('view engine', 'ejs');
-
 app.set('views', path.join(__dirname, '..'));
 
-// =========================
+
+// VISTAS
+app.get("/", (req, res) => {
+    res.render("login");
+});
+
+app.get("/admin", (req, res) => {
+    res.render("admin");
+});
+
+app.get("/inicio", (req, res) => {
+    res.render("inicio");
+});
+
+
 // CONEXIÓN A MYSQL
-// =========================
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -63,7 +74,7 @@ app.post("/login", (req, res) => {
 });
 
 // =========================
-// REGISTRO (ARREGLADO)
+// REGISTRO
 // =========================
 app.post("/registro", (req, res) => {
     const { username, password, nombre } = req.body;
@@ -76,10 +87,7 @@ app.post("/registro", (req, res) => {
     };
 
     db.query("INSERT INTO usuarios SET ?", nuevo, (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json(err);
-        }
+        if (err) return res.status(500).json(err);
 
         res.json({
             message: "Usuario creado",
@@ -90,7 +98,7 @@ app.post("/registro", (req, res) => {
 });
 
 // =========================
-// CREAR USUARIO DESDE ADMIN (NUEVO Y CORRECTO)
+// CREAR USUARIO
 // =========================
 app.post("/usuarios", (req, res) => {
     const { username, password, nombre, rol } = req.body;
@@ -114,7 +122,7 @@ app.post("/usuarios", (req, res) => {
 });
 
 // =========================
-// USUARIOS
+// OBTENER USUARIOS
 // =========================
 app.get("/usuarios", (req, res) => {
     db.query("SELECT * FROM usuarios", (err, result) => {
@@ -185,7 +193,7 @@ app.delete("/citas/:id", (req, res) => {
 });
 
 // =========================
-// EXPORTAR
+// EXPORTAR CITAS
 // =========================
 app.get("/exportar-citas", (req, res) => {
     db.query("SELECT * FROM citas", (err, result) => {

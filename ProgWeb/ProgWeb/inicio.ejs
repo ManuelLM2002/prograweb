@@ -93,7 +93,7 @@ window.onload = function() {
     const user = localStorage.getItem("user");
 
     if (!user) {
-        window.location.href = "login.html";
+        window.location.href = "/login";
     }
 
     document.getElementById("nombreUsuario").textContent = user;
@@ -101,7 +101,7 @@ window.onload = function() {
 
 function logout() {
     localStorage.clear();
-    window.location.href = "login.html";
+    window.location.href = "/login";
 }
 </script>
 

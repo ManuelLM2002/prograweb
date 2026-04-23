@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'sinatra/json'
+require 'mysql2'
 require 'rack/cors'
 require 'json'
 
@@ -7,7 +8,7 @@ set :bind, '0.0.0.0'
 set :port, 3000
 
 # =========================
-# 🌐 CORS
+# CORS
 # =========================
 use Rack::Cors do
   allow do
@@ -19,17 +20,14 @@ use Rack::Cors do
 end
 
 # =========================
-# 👤 USUARIOS
+# 🛢️ CONEXIÓN MYSQL
 # =========================
-USUARIOS = [
-  { id: 1, username: "admin@admin.com", password: "1234", nombre: "Administrador", rol: "Admin" },
-  { id: 2, username: "miguel@gmail.com", password: "1234", nombre: "Miguel", rol: "Usuario" }
-]
-
-# =========================
-# 📅 CITAS
-# =========================
-CITAS = []
+DB = Mysql2::Client.new(
+  host: "localhost",
+  username: "root",
+  password: "Admin123!",
+  database: "hospital"
+)
 
 # =========================
 # PREFLIGHT
@@ -44,9 +42,13 @@ end
 post '/login' do
   data = JSON.parse(request.body.read)
 
-  user = USUARIOS.find do |u|
-    u[:username] == data["username"] && u[:password] == data["password"]
-  end
+  result = DB.query("
+    SELECT * FROM usuarios 
+    WHERE username='#{data["username"]}' 
+    AND password='#{data["password"]}'
+  ")
+
+  user = result.first
 
   if user.nil?
     status 401
@@ -54,114 +56,116 @@ post '/login' do
   end
 
   json(
-    username: user[:username],
-    nombre: user[:nombre],
-    rol: user[:rol]
+    username: user["username"],
+    nombre: user["nombre"],
+    rol: user["rol"] || "Usuario"
   )
 end
 
 # =========================
-# 📝 REGISTRO (CREAR)
+# 📝 REGISTRO
 # =========================
 post '/registro' do
   data = JSON.parse(request.body.read)
 
-  nuevo = {
-    id: Time.now.to_i,
-    username: data["username"],
-    password: data["password"],
-    nombre: data["nombre"],
-    rol: "Usuario"
-  }
+  DB.query("
+    INSERT INTO usuarios (username, password, nombre, rol)
+    VALUES ('#{data["username"]}', '#{data["password"]}', '#{data["nombre"]}', 'Usuario')
+  ")
 
-  USUARIOS << nuevo
-  json(nuevo)
+  json(message: "Usuario creado")
 end
 
 # =========================
-# 👤 OBTENER USUARIOS
+# 👤 CREAR USUARIO (ADMIN)
 # =========================
-get '/usuarios' do
-  json USUARIOS
-end
-
-# =========================
-# ✏️ EDITAR / CAMBIAR ROL
-# =========================
-put '/usuarios/:id' do
-  id = params[:id].to_i
+post '/usuarios' do
   data = JSON.parse(request.body.read)
 
-  user = USUARIOS.find { |u| u[:id] == id }
+  DB.query("
+    INSERT INTO usuarios (username, password, nombre, rol)
+    VALUES ('#{data["username"]}', '#{data["password"]}', '#{data["nombre"]}', '#{data["rol"] || "Usuario"}')
+  ")
 
-  if user.nil?
-    status 404
-    return json(message: "Usuario no encontrado")
-  end
+  json(message: "Usuario creado")
+end
 
-  user[:nombre] = data["nombre"] if data["nombre"]
-  user[:username] = data["username"] if data["username"]
-  user[:rol] = data["rol"] if data["rol"]
+# =========================
+# 👥 OBTENER USUARIOS
+# =========================
+get '/usuarios' do
+  result = DB.query("SELECT * FROM usuarios")
+  json result.to_a
+end
 
-  json user
+# =========================
+# ✏️ EDITAR USUARIO
+# =========================
+put '/usuarios/:id' do
+  id = params[:id]
+  data = JSON.parse(request.body.read)
+
+  campos = []
+  campos << "nombre='#{data["nombre"]}'" if data["nombre"]
+  campos << "username='#{data["username"]}'" if data["username"]
+  campos << "rol='#{data["rol"]}'" if data["rol"]
+
+  DB.query("UPDATE usuarios SET #{campos.join(", ")} WHERE id=#{id}")
+
+  json(message: "Actualizado")
 end
 
 # =========================
 # ❌ ELIMINAR USUARIO
 # =========================
 delete '/usuarios/:id' do
-  id = params[:id].to_i
+  id = params[:id]
 
-  user = USUARIOS.find { |u| u[:id] == id }
+  DB.query("DELETE FROM usuarios WHERE id=#{id}")
 
-  if user.nil?
-    status 404
-    return json(message: "Usuario no encontrado")
-  end
-
-  USUARIOS.delete(user)
-
-  json(message: "Usuario eliminado")
+  json(message: "Eliminado")
 end
 
 # =========================
-# 📅 CITAS (IGUAL QUE NODE)
+# 📅 CREAR CITA
 # =========================
 post '/citas' do
   data = JSON.parse(request.body.read)
 
-  nueva = {
-    id: Time.now.to_i,
-    especialidad: data["especialidad"],
-    fecha: data["fecha"],
-    hora: data["hora"],
-    estado: "Confirmada",
-    usuario: data["usuario"]
-  }
+  DB.query("
+    INSERT INTO citas (id, especialidad, fecha, hora, estado, usuario)
+    VALUES (#{Time.now.to_i}, '#{data["especialidad"]}', '#{data["fecha"]}', '#{data["hora"]}', 'Confirmada', '#{data["usuario"]}')
+  ")
 
-  CITAS << nueva
-  json nueva
+  json(message: "Cita creada")
 end
 
+# =========================
+# 📅 OBTENER CITAS
+# =========================
 get '/citas' do
-  json CITAS
+  result = DB.query("SELECT * FROM citas")
+  json result.to_a
 end
 
-get '/mis-citas/:usuario' do
-  usuario = params[:usuario]
-  mis = CITAS.select { |c| c[:usuario] == usuario }
-  json mis
-end
-
+# =========================
+# ❌ ELIMINAR CITA
+# =========================
 delete '/citas/:id' do
-  id = params[:id].to_i
-  cita = CITAS.find { |c| c[:id] == id }
+  id = params[:id]
 
-  if cita.nil?
-    status 404
-    return json(message: "Cita no encontrada")
-  end
+  DB.query("DELETE FROM citas WHERE id=#{id}")
 
-  CITAS.delete(cita)
   json(message: "Cita eliminada")
+end
+
+# =========================
+# 📤 EXPORTAR CITAS
+# =========================
+get '/exportar-citas' do
+  result = DB.query("SELECT * FROM citas").to_a
+
+  File.write("citas.json", JSON.pretty_generate(result))
+
+  json(message: "Exportado correctamente")
 end

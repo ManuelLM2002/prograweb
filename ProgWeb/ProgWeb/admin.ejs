@@ -71,7 +71,7 @@
 </div>
 
 <script>
-const API = "http://10.168.90.71:3000";
+const API = window.location.origin;
 
 /* =========================
    🔒 PROTECCIÓN SEGURA
@@ -80,7 +80,7 @@ const rol = (localStorage.getItem("rol") || "").toLowerCase();
 
 if (rol !== "admin") {
     alert("No eres admin");
-    window.location.href = "login.html";
+    window.location.href = "/login";
 }
 
 /* =========================
@@ -98,7 +98,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 function logout() {
     localStorage.clear();
-    window.location.href = "login.html";
+    window.location.href = "/login";
 }
 
 /* ================= CITAS ================= */

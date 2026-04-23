@@ -44,7 +44,7 @@
 
                 <p class="text-center mb-0 text-muted">
                     ¿No tienes una cuenta? 
-                    <a href="registro.html" class="fw-bold text-decoration-none">Regístrate aquí</a>
+                    <a href="/registro" class="fw-bold text-decoration-none">Regístrate aquí</a>
                 </p>
             </form>
 
@@ -64,7 +64,7 @@ async function login(e) {
     const password = document.getElementById("password").value.trim();
 
     try {
-        const res = await fetch("http://10.168.90.71:3000/login", {
+        const res = await fetch("/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -86,9 +86,9 @@ async function login(e) {
             }
 
             if (data.rol === "Admin") {
-                window.location.href = "admin.html";
+                window.location.href = "/admin";
             } else {
-                window.location.href = "inicio.html";
+                window.location.href = "/inicio";
             }
 
         } else {
