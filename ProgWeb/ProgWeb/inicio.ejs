@@ -15,16 +15,16 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="inicio.html">Clínica San Rafael</a>
+        <a class="navbar-brand fw-bold" href="/inicio">Clínica San Rafael</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="menu">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="inicio.html">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" href="panel.html">Agendar Cita</a></li>
-                <li class="nav-item"><a class="nav-link" href="citas.html">Mis Citas</a></li>
-                <li class="nav-item"><a class="nav-link" href="galeria.html">Galería</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/inicio">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="/panel">Agendar Cita</a></li>
+                <li class="nav-item"><a class="nav-link" href="/citas">Mis Citas</a></li>
+                <li class="nav-item"><a class="nav-link" href="/galeria">Galería</a></li>
 
                 <li class="nav-item">
                     <a class="nav-link text-danger" href="#" onclick="logout()">Cerrar Sesión</a>
@@ -57,8 +57,8 @@
                         diferentes especialistas y realizar el pago de tus servicios médicos de forma segura.
                     </p>
                     <div class="d-grid gap-2 d-md-block mt-4">
-                        <a href="panel.html" class="btn btn-primary shadow-sm me-md-2">Agendar Cita</a>
-                        <a href="citas.html" class="btn btn-outline-secondary shadow-sm">Ver mis citas</a>
+                        <a href="/panel" class="btn btn-primary shadow-sm me-md-2">Agendar Cita</a>
+                        <a href="/citas" class="btn btn-outline-secondary shadow-sm">Ver mis citas</a>
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@ window.onload = function() {
     const user = localStorage.getItem("user");
 
     if (!user) {
-        window.location.href = "login.html";
+        window.location.href = "/login";
     }
 
     document.getElementById("nombreUsuario").textContent = user;
@@ -101,7 +101,7 @@ window.onload = function() {
 
 function logout() {
     localStorage.clear();
-    window.location.href = "login.html";
+    window.location.href = "/login";
 }
 </script>
 

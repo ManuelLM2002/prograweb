@@ -11,13 +11,23 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, '..')));
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '..'));
+
+// =========================
+// RUTAS DE VISTAS FRONTEND (Agregadas)
+// =========================
 app.get("/", (req, res) => {
     res.render("login"); 
 });
-
-app.set('view engine', 'ejs');
-
-app.set('views', path.join(__dirname, '..'));
+app.get("/inicio", (req, res) => res.render("inicio"));
+app.get("/login", (req, res) => res.render("login"));
+app.get("/registro", (req, res) => res.render("registro"));
+app.get("/panel", (req, res) => res.render("panel"));
+app.get("/citas", (req, res) => res.render("citas"));
+app.get("/galeria", (req, res) => res.render("galeria"));
+app.get("/pagos", (req, res) => res.render("pagos"));
+app.get("/admin", (req, res) => res.render("admin"));
 
 // =========================
 // CONEXIÓN A MYSQL
@@ -63,7 +73,7 @@ app.post("/login", (req, res) => {
 });
 
 // =========================
-// REGISTRO (ARREGLADO)
+// REGISTRO 
 // =========================
 app.post("/registro", (req, res) => {
     const { username, password, nombre } = req.body;
@@ -90,7 +100,7 @@ app.post("/registro", (req, res) => {
 });
 
 // =========================
-// CREAR USUARIO DESDE ADMIN (NUEVO Y CORRECTO)
+// CREAR USUARIO DESDE ADMIN 
 // =========================
 app.post("/usuarios", (req, res) => {
     const { username, password, nombre, rol } = req.body;
@@ -148,7 +158,7 @@ app.delete("/usuarios/:id", (req, res) => {
 });
 
 // =========================
-// CITAS
+// CITAS (GLOBALES)
 // =========================
 app.post("/citas", (req, res) => {
     const { especialidad, fecha, hora, usuario } = req.body;
@@ -170,6 +180,17 @@ app.post("/citas", (req, res) => {
 
 app.get("/citas", (req, res) => {
     db.query("SELECT * FROM citas", (err, result) => {
+        if (err) return res.status(500).json(err);
+        res.json(result);
+    });
+});
+
+// =========================
+// MIS CITAS (POR USUARIO - Agregado)
+// =========================
+app.get("/mis-citas/:correo", (req, res) => {
+    const correo = req.params.correo;
+    db.query("SELECT * FROM citas WHERE usuario=?", [correo], (err, result) => {
         if (err) return res.status(500).json(err);
         res.json(result);
     });
