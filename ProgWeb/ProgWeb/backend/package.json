@@ -12,6 +12,8 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "ejs": "^5.0.2"
+    "@paypal/checkout-server-sdk": "^1.0.3",
+    "ejs": "^5.0.2",
+    "nodemailer": "^8.0.7"
   }
 }
