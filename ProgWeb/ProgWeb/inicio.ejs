@@ -11,101 +11,140 @@
 
 </head>
 
+<script>
+    async function cargarClima() {
+        try {
+            const res = await fetch(
+                "https://api.openweathermap.org/data/2.5/weather?q=Mexico&appid=cb59644d8af901f01e781941f38a6d79&units=metric&lang=es"
+            );
+
+            const data = await res.json();
+
+            // validar respuesta
+            if (data.cod !== 200) {
+                throw new Error(data.message);
+            }
+
+            document.getElementById("clima-texto").innerHTML =
+                `${data.main.temp}°C - ${data.weather[0].description}`;
+
+        } catch (error) {
+            console.error("ERROR CLIMA:", error);
+            document.getElementById("clima-texto").innerHTML =
+                "No disponible ⚠️";
+        }
+    }
+
+    cargarClima();
+</script>
+
 <body class="bg-light d-flex flex-column min-vh-100">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="/inicio">Clínica San Rafael</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="menu">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="/inicio">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" href="/panel">Agendar Cita</a></li>
-                <li class="nav-item"><a class="nav-link" href="/citas">Mis Citas</a></li>
-                <li class="nav-item"><a class="nav-link" href="/galeria">Galería</a></li>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/inicio">Clínica San Rafael</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="/inicio">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/panel">Agendar Cita</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/mis-citas-view">Mis Citas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/galeria">Galería</a></li>
 
-                <li class="nav-item">
-                    <a class="nav-link text-danger" href="#" onclick="logout()">Cerrar Sesión</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="container mt-4 flex-grow-1">
-    <div class="row">
-
-        <div class="col-lg-8">
-            <div class="card mb-4 shadow-sm border-0">
-                <div class="card-body py-4">
-                    <h2 class="card-title fw-bold text-primary">
-                        Bienvenido, <span id="nombreUsuario"></span>
-                    </h2>
-                    <p class="text-muted mb-0 fs-5">
-                        Te damos la bienvenida al portal del paciente de la Clínica San Rafael.
-                    </p>
-                </div>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="#" onclick="logout()">Cerrar Sesión</a>
+                    </li>
+                </ul>
             </div>
+        </div>
+    </nav>
 
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-body">
-                    <h3 class="card-title fw-bold mb-3">Resumen de tu cuenta</h3>
-                    <p class="text-secondary">
-                        Desde este portal podrás consultar tus citas activas, agendar nuevas consultas con nuestros
-                        diferentes especialistas y realizar el pago de tus servicios médicos de forma segura.
-                    </p>
-                    <div class="d-grid gap-2 d-md-block mt-4">
-                        <a href="/panel" class="btn btn-primary shadow-sm me-md-2">Agendar Cita</a>
-                        <a href="/citas" class="btn btn-outline-secondary shadow-sm">Ver mis citas</a>
+    <div class="container mt-4 flex-grow-1">
+        <div class="row">
+
+            <div class="col-lg-8">
+                <div class="card mb-4 shadow-sm border-0">
+                    <div class="card-body py-4">
+                        <h2 class="card-title fw-bold text-primary">
+                            Bienvenido, <span id="nombreUsuario"></span>
+                        </h2>
+                        <p class="text-muted mb-0 fs-5">
+                            Te damos la bienvenida al portal del paciente de la Clínica San Rafael.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body">
+                        <h3 class="card-title fw-bold mb-3">Resumen de tu cuenta</h3>
+                        <p class="text-secondary">
+                            Desde este portal podrás consultar tus citas activas, agendar nuevas consultas con nuestros
+                            diferentes especialistas y realizar el pago de tus servicios médicos de forma segura.
+                        </p>
+                        <div class="d-grid gap-2 d-md-block mt-4">
+                            <a href="/panel" class="btn btn-primary shadow-sm me-md-2">Agendar Cita</a>
+                            <a href="/mis-citas-view" class="btn btn-outline-secondary shadow-sm">Ver mis citas</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-lg-4 mt-4 mt-lg-0">
-            <div class="card mb-3 shadow-sm border-0 bg-primary text-white">
-                <div class="card-body text-center">
-                    <h4 class="fw-bold">Información</h4>
-                    <p class="mb-0">Recuerda llegar 15 minutos antes de tu cita para el registro en recepción.</p>
+
+
+            <div class="col-lg-4 mt-4 mt-lg-0">
+                <div class="card mb-3 shadow-sm border-0 bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h4 class="fw-bold">Información</h4>
+                        <p class="mb-0">Recuerda llegar 15 minutos antes de tu cita para el registro en recepción.</p>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h4 class="fw-bold text-primary">Contacto</h4>
+                        <p class="mb-1"><strong>Tel:</strong> (555) 123-4567</p>
+                        <p class="mb-0"><strong>Email:</strong> contacto@clinica.com</p>
+                    </div>
+                </div>
+
+                <div class="container mt-4">
+                    <div class="card shadow border-0 bg-info text-white">
+                        <div class="card-body text-center">
+                            <h4 class="fw-bold">🌦️ Clima actual</h4>
+                            <p id="clima-texto" class="mb-0">Cargando...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="card shadow-sm border-0">
-                <div class="card-body text-center">
-                    <h4 class="fw-bold text-primary">Contacto</h4>
-                    <p class="mb-1"><strong>Tel:</strong> (555) 123-4567</p>
-                    <p class="mb-0"><strong>Email:</strong> contacto@clinica.com</p>
-                </div>
-            </div>
         </div>
-
     </div>
-</div>
 
-<footer class="bg-dark text-white text-center py-4 mt-5">
-    <p class="mb-0">© 2026 - Clínica San Rafael - Proyecto HTML5 & Bootstrap</p>
-</footer>
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <p class="mb-0">© 2026 - Clínica San Rafael - Proyecto HTML5 & Bootstrap</p>
+    </footer>
 
-<script>
-window.onload = function() {
-    const user = localStorage.getItem("user");
+    <script>
+        window.onload = function () {
+            const user = localStorage.getItem("user");
 
-    if (!user) {
-        window.location.href = "/login";
-    }
+            if (!user) {
+                window.location.href = "/login";
+            }
 
-    document.getElementById("nombreUsuario").textContent = user;
-}
+            document.getElementById("nombreUsuario").textContent = user;
+        }
 
-function logout() {
-    localStorage.clear();
-    window.location.href = "/login";
-}
-</script>
+        function logout() {
+            localStorage.clear();
+            window.location.href = "/login";
+        }
+    </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
+
 </html>

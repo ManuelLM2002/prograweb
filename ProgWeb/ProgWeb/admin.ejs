@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Panel Admin</title>
@@ -8,117 +9,128 @@
 
 <body class="bg-light">
 
-<nav class="navbar navbar-dark bg-dark">
-    <div class="container">
-        <span class="navbar-brand">Panel Admin</span>
-        <button class="btn btn-danger" onclick="logout()">Cerrar Sesión</button>
-    </div>
-</nav>
-
-<div class="container mt-4">
-
-    <h3>Bienvenido: <span id="nombreAdmin"></span></h3>
-
-    <!-- ================= CITAS ================= -->
-    <div class="card mt-4">
-        <div class="card-body">
-            <h4>Citas</h4>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Especialidad</th>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                        <th>Usuario</th>
-                        <th>Estado</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="tablaCitas"></tbody>
-            </table>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <span class="navbar-brand">Panel Admin</span>
+            <button class="btn btn-danger" onclick="logout()">Cerrar Sesión</button>
         </div>
-    </div>
+    </nav>
 
-    <!-- ================= USUARIOS ================= -->
-    <div class="card mt-4">
-        <div class="card-body">
-            <h4>Usuarios</h4>
+    <div class="container mt-4">
 
-            <!-- CREAR USUARIO -->
-            <div class="mb-3">
-                <input id="nuevoNombre" class="form-control mb-2" placeholder="Nombre">
-                <input id="nuevoCorreo" class="form-control mb-2" placeholder="Correo">
-                <input id="nuevoPass" class="form-control mb-2" placeholder="Contraseña">
-                <button class="btn btn-success" onclick="crearUsuario()">Crear Usuario</button>
+        <h3>Bienvenido: <span id="nombreAdmin"></span></h3>
+
+        <!--CITAS-->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h4>Citas</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Especialidad</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Usuario</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCitas"></tbody>
+                </table>
             </div>
-
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Correo</th>
-                        <th>Nombre</th>
-                        <th>Rol</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="tablaUsuarios"></tbody>
-            </table>
         </div>
+
+        <!--USUARIOS-->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h4>Usuarios</h4>
+
+                <!-- CREAR USUARIO -->
+                <div class="mb-3">
+                    <input id="nuevoNombre" class="form-control mb-2" placeholder="Nombre">
+                    <input id="nuevoCorreo" class="form-control mb-2" placeholder="Correo">
+                    <input id="nuevoPass" class="form-control mb-2" placeholder="Contraseña">
+                    <button class="btn btn-success" onclick="crearUsuario()">Crear Usuario</button>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Correo</th>
+                            <th>Nombre</th>
+                            <th>Rol</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaUsuarios"></tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
-</div>
+    <script>
+        const API = "";
 
-<script>
-const API = "";
+        /*PROTECCIÓN SEGURA */
+        const rol = (localStorage.getItem("rol") || "").toLowerCase();
 
-/* =========================
-   🔒 PROTECCIÓN SEGURA
-========================= */
-const rol = (localStorage.getItem("rol") || "").toLowerCase();
+        if (rol !== "admin") {
+            alert("No eres admin");
+            window.location.href = "/login";
+        }
 
-if (rol !== "admin") {
-    alert("No eres admin");
-    window.location.href = "/login";
-}
+        /*INICIALIZACIÓN SEGURA DOM */
+        window.addEventListener("DOMContentLoaded", () => {
+            const nombreAdmin = document.getElementById("nombreAdmin");
+            if (nombreAdmin) {
+                nombreAdmin.textContent = localStorage.getItem("user") || "";
+            }
 
-/* =========================
-   INICIALIZACIÓN SEGURA DOM
-========================= */
-window.addEventListener("DOMContentLoaded", () => {
-    const nombreAdmin = document.getElementById("nombreAdmin");
-    if (nombreAdmin) {
-        nombreAdmin.textContent = localStorage.getItem("user") || "";
-    }
+            cargarCitas();
+            cargarUsuarios();
+        });
 
-    cargarCitas();
-    cargarUsuarios();
-});
+        function logout() {
+            localStorage.clear();
+            window.location.href = "/login";
+        }
 
-function logout() {
-    localStorage.clear();
-    window.location.href = "/login";
-}
+        /* CITAS */
+        async function cargarCitas() {
+            console.log("Cargando citas...");
+            const res = await fetch(API + "/citas");
+            console.log(res);
+            const data = await res.json();
+            console.log(data);
+            try {
+                const res = await fetch(API + "/citas");
+                const data = await res.json();
 
-/* ================= CITAS ================= */
-async function cargarCitas() {
-    try {
-        const res = await fetch(API + "/citas");
-        const data = await res.json();
+                const tabla = document.getElementById("tablaCitas");
+                if (!tabla) return;
 
-        const tabla = document.getElementById("tablaCitas");
-        if (!tabla) return;
+                tabla.innerHTML = "";
 
-        tabla.innerHTML = "";
-
-        data.forEach(c => {
-            tabla.innerHTML += `
+                data.forEach(c => {
+                    tabla.innerHTML += `
                 <tr>
                     <td>${c.id}</td>
                     <td>${c.especialidad}</td>
-                    <td>${c.fecha}</td>
-                    <td>${c.hora}</td>
+                   <td>
+                        ${new Date(c.fecha).toLocaleDateString('es-MX', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    })}
+                    <td>${new Date(`1970-01-01T${c.hora}`).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                            })}
+                    </td>
+                    
                     <td>${c.usuario}</td>
                     <td>${c.estado}</td>
                     <td>
@@ -126,31 +138,31 @@ async function cargarCitas() {
                     </td>
                 </tr>
             `;
-        });
+                });
 
-    } catch (err) {
-        console.error("Error cargarCitas:", err);
-    }
-}
+            } catch (err) {
+                console.error("Error cargarCitas:", err);
+            }
+        }
 
-async function eliminarCita(id) {
-    await fetch(API + "/citas/" + id, { method: "DELETE" });
-    cargarCitas();
-}
+        async function eliminarCita(id) {
+            await fetch(API + "/citas/" + id, { method: "DELETE" });
+            cargarCitas();
+        }
 
-/* ================= USUARIOS ================= */
-async function cargarUsuarios() {
-    try {
-        const res = await fetch(API + "/usuarios");
-        const data = await res.json();
+        /*  USUARIOS */
+        async function cargarUsuarios() {
+            try {
+                const res = await fetch(API + "/usuarios");
+                const data = await res.json();
 
-        const tabla = document.getElementById("tablaUsuarios");
-        if (!tabla) return;
+                const tabla = document.getElementById("tablaUsuarios");
+                if (!tabla) return;
 
-        tabla.innerHTML = "";
+                tabla.innerHTML = "";
 
-        data.forEach(u => {
-            tabla.innerHTML += `
+                data.forEach(u => {
+                    tabla.innerHTML += `
                 <tr>
                     <td>${u.id}</td>
                     <td><input value="${u.username}" id="correo-${u.id}" class="form-control"></td>
@@ -163,65 +175,66 @@ async function cargarUsuarios() {
                     </td>
                 </tr>
             `;
-        });
+                });
 
-    } catch (err) {
-        console.error("Error cargarUsuarios:", err);
-    }
-}
+            } catch (err) {
+                console.error("Error cargarUsuarios:", err);
+            }
+        }
 
-/* ================= CREAR USUARIO ================= */
-async function crearUsuario() {
-    const nombre = document.getElementById("nuevoNombre")?.value;
-    const username = document.getElementById("nuevoCorreo")?.value;
-    const password = document.getElementById("nuevoPass")?.value;
+        /* CREAR USUARIO */
+        async function crearUsuario() {
+            const nombre = document.getElementById("nuevoNombre")?.value;
+            const username = document.getElementById("nuevoCorreo")?.value;
+            const password = document.getElementById("nuevoPass")?.value;
 
-    try {
-        await fetch(API + "/usuarios", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ nombre, username, password, rol: "Usuario" })
-        });
+            try {
+                await fetch(API + "/usuarios", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ nombre, username, password, rol: "Usuario" })
+                });
 
-        cargarUsuarios();
-    } catch (err) {
-        console.error("Error crearUsuario:", err);
-    }
-}
+                cargarUsuarios();
+            } catch (err) {
+                console.error("Error crearUsuario:", err);
+            }
+        }
 
-/* ================= EDITAR ================= */
-async function editarUsuario(id) {
-    const nombre = document.getElementById("nombre-" + id).value;
-    const username = document.getElementById("correo-" + id).value;
+        /* EDITAR */
+        async function editarUsuario(id) {
+            const nombre = document.getElementById("nombre-" + id).value;
+            const username = document.getElementById("correo-" + id).value;
 
-    await fetch(API + "/usuarios/" + id, {
-        method: "PUT",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ nombre, username })
-    });
+            await fetch(API + "/usuarios/" + id, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nombre, username })
+            });
 
-    cargarUsuarios();
-}
+            cargarUsuarios();
+        }
 
-/* ================= CAMBIAR ROL ================= */
-async function cambiarRol(id, rolActual) {
-    const nuevoRol = (rolActual || "").toLowerCase() === "admin" ? "Usuario" : "Admin";
+        /*  CAMBIAR ROL */
+        async function cambiarRol(id, rolActual) {
+            const nuevoRol = (rolActual || "").toLowerCase() === "admin" ? "Usuario" : "Admin";
 
-    await fetch(API + "/usuarios/" + id, {
-        method: "PUT",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ rol: nuevoRol })
-    });
+            await fetch(API + "/usuarios/" + id, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ rol: nuevoRol })
+            });
 
-    cargarUsuarios();
-}
+            cargarUsuarios();
+        }
 
-/* ================= ELIMINAR ================= */
-async function eliminarUsuario(id) {
-    await fetch(API + "/usuarios/" + id, { method: "DELETE" });
-    cargarUsuarios();
-}
-</script>
+        /* ELIMINAR */
+        async function eliminarUsuario(id) {
+            await fetch(API + "/usuarios/" + id, { method: "DELETE" });
+            cargarUsuarios();
+        }
+    </script>
 
 </body>
+
 </html>
