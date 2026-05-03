@@ -111,10 +111,11 @@ app.get("/admin", (req, res) => res.render("admin"));
 
 // CONEXIÓN A MYSQL
 const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "Admin123!",
-    database: "hospital"
+    host: process.env.DB_HOST || "localhost",
+    user: process.env.DB_USER || "root",
+    password: process.env.DB_PASSWORD || "Admin123!",
+    database: process.env.DB_NAME || "hospital",
+    port: process.env.DB_PORT || 3306
 });
 
 db.connect(err => {
@@ -343,6 +344,7 @@ app.get("/exportar-citas", (req, res) => {
 });
 
 // SERVIDOR
-app.listen(3000, "0.0.0.0", () => {
-    console.log("Servidor en http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
