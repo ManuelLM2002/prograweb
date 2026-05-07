@@ -129,8 +129,8 @@ db.connect(err => {
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: "clinicahospitalsanrafael@gmail.com",
-        pass: "wwcs tyvx vega utzt"
+        user: process.env.EMAIL_USER || "clinicahospitalsanrafael@gmail.com",
+        pass: process.env.EMAIL_PASS || "wwcs tyvx vega utzt"
     }
 });
 
@@ -282,7 +282,7 @@ app.post("/citas", (req, res) => {
         // ✉️ ENVIAR CORREO
         try {
             await transporter.sendMail({
-                from: '"Clínica San Rafael" <TU_CORREO@gmail.com>',
+                from: '"Clínica San Rafael" <clinicahospitalsanrafael@gmail.com>',
                 to: usuario,
                 subject: "Confirmación de cita médica",
                 html: `
