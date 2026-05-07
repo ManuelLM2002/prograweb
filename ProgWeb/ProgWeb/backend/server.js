@@ -127,11 +127,16 @@ db.connect(err => {
 });
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp-relay.brevo.com",
+    port: 587,
+    secure: false,
     auth: {
-        user: process.env.EMAIL_USER || "clinicahospitalsanrafael@gmail.com",
-        pass: process.env.EMAIL_PASS || "wwcs tyvx vega utzt"
-    }
+        user: process.env.BREVO_USER,
+        pass: process.env.BREVO_PASS
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000
 });
 
 // LOGIN
@@ -260,9 +265,6 @@ app.get("/test-correo", async (req, res) => {
 });
 
 
-
-
-
 // CITAS (Enviar confirmación por correo)
 app.post("/citas", (req, res) => {
     const { especialidad, fecha, hora, usuario } = req.body;
@@ -276,35 +278,36 @@ app.post("/citas", (req, res) => {
         usuario
     };
 
-    db.query("INSERT INTO citas SET ?", nueva, async (err) => {
+    db.query("INSERT INTO citas SET ?", nueva, (err) => {
         if (err) return res.status(500).json(err);
 
-        // ✉️ ENVIAR CORREO
-        try {
-            await transporter.sendMail({
-                from: '"Clínica San Rafael" <clinicahospitalsanrafael@gmail.com>',
-                to: usuario,
-                subject: "Confirmación de cita médica",
-                html: `
-                    <h2>✅ Cita Confirmada</h2>
-                    <p>Hola, tu cita ha sido registrada correctamente:</p>
-
-                    <ul>
-                        <li><b>Especialidad:</b> ${especialidad}</li>
-                        <li><b>Fecha:</b> ${new Date(fecha).toLocaleDateString()}</li>
-                        <li><b>Hora:</b> ${hora}</li>
-                    </ul>
-
-                    <p>Gracias por confiar en Clínica San Rafael 🏥</p>
-                `
-            });
-
-            console.log("Correo enviado");
-        } catch (error) {
-            console.error("Error enviando correo:", error);
-        }
-
+        // RESPONDER RÁPIDO AL FRONTEND
         res.json(nueva);
+
+        // ENVIAR CORREO EN SEGUNDO PLANO
+        transporter.sendMail({
+            from: '"Clínica San Rafael" <clinicahospitalsanrafael@gmail.com>',
+            to: usuario,
+            subject: "Confirmación de cita médica",
+            html: `
+                <h2>✅ Cita Confirmada</h2>
+                <p>Hola, tu cita ha sido registrada correctamente:</p>
+
+                <ul>
+                    <li><b>Especialidad:</b> ${especialidad}</li>
+                    <li><b>Fecha:</b> ${new Date(fecha).toLocaleDateString()}</li>
+                    <li><b>Hora:</b> ${hora}</li>
+                </ul>
+
+                <p>Gracias por confiar en Clínica San Rafael 🏥</p>
+            `
+        })
+        .then(() => {
+            console.log("Correo enviado");
+        })
+        .catch((error) => {
+            console.error("Error enviando correo:", error);
+        });
     });
 });
 
