@@ -147,36 +147,75 @@
     inputFecha.setAttribute("min", minFormat);
 
     // 2. Generar horarios dinámicos al escoger un día
-    inputFecha.addEventListener("change", function() {
-        selectHora.disabled = false;
-        selectHora.innerHTML = '<option value="" disabled selected>Selecciona una hora...</option>';
+    inputFecha.addEventListener("change", async function() {
+        selectHora.disabled = true;
+        selectHora.innerHTML = '<option value="" disabled selected>⏳ Cargando disponibilidad...</option>';
 
-        // Usamos T00:00:00 para evitar que el navegador cambie el día por la zona horaria
-        const fechaSeleccionada = new Date(this.value + "T00:00:00");
+        const fechaElegida = this.value; // Formato YYYY-MM-DD
+        let horasOcupadas = [];
+
+        // 🟢 PREGUNTAR A LA BASE DE DATOS QUÉ HORAS ESTÁN OCUPADAS
+        try {
+            const res = await fetch(`/api/horarios-ocupados?fecha=${fechaElegida}`);
+            horasOcupadas = await res.json();
+        } catch (error) {
+            console.error("Error verificando disponibilidad");
+        }
+
+        const fechaSeleccionada = new Date(fechaElegida + "T00:00:00");
         const diaSemana = fechaSeleccionada.getDay(); // 0 = Domingo, 1 = Lunes... 6 = Sábado
 
         let horaInicio, horaFin;
 
         if (diaSemana === 0 || diaSemana === 6) {
-            // Sábados (6) y Domingos (0)
             horaInicio = 10;
             horaFin = 17;
         } else {
-            // Lunes a Viernes (1-5)
             horaInicio = 9;
             horaFin = 22;
         }
 
+        selectHora.innerHTML = '<option value="" disabled selected>Selecciona una hora...</option>';
+        let slotsDisponibles = 0;
+
         // Crear los bloques de 30 minutos
         for (let h = horaInicio; h < horaFin; h++) {
             let horaString = h.toString().padStart(2, '0');
-            selectHora.innerHTML += `<option value="${horaString}:00">${horaString}:00</option>`;
-            selectHora.innerHTML += `<option value="${horaString}:30">${horaString}:30</option>`;
+            
+            // Evaluamos la hora en punto (:00)
+            let horaPunto = `${horaString}:00`;
+            if (horasOcupadas.includes(horaPunto)) {
+                selectHora.innerHTML += `<option value="${horaPunto}" disabled>❌ ${horaPunto} - Ocupado</option>`;
+            } else {
+                selectHora.innerHTML += `<option value="${horaPunto}">✅ ${horaPunto}</option>`;
+                slotsDisponibles++;
+            }
+
+            // Evaluamos la media hora (:30)
+            let horaMedia = `${horaString}:30`;
+            if (horasOcupadas.includes(horaMedia)) {
+                selectHora.innerHTML += `<option value="${horaMedia}" disabled>❌ ${horaMedia} - Ocupado</option>`;
+            } else {
+                selectHora.innerHTML += `<option value="${horaMedia}">✅ ${horaMedia}</option>`;
+                slotsDisponibles++;
+            }
         }
         
         // Agregar la hora de cierre exacta
-        let cierreString = horaFin.toString().padStart(2, '0');
-        selectHora.innerHTML += `<option value="${cierreString}:00">${cierreString}:00</option>`;
+        let cierreString = `${horaFin.toString().padStart(2, '0')}:00`;
+        if (horasOcupadas.includes(cierreString)) {
+            selectHora.innerHTML += `<option value="${cierreString}" disabled>❌ ${cierreString} - Ocupado</option>`;
+        } else {
+            selectHora.innerHTML += `<option value="${cierreString}">✅ ${cierreString}</option>`;
+            slotsDisponibles++;
+        }
+
+        // 🔴 SI NO HAY SLOTS DISPONIBLES, AVISAMOS QUE EL DÍA ESTÁ LLENO
+        if (slotsDisponibles === 0) {
+            selectHora.innerHTML = '<option value="" disabled selected>⚠️ Día completamente lleno</option>';
+        }
+
+        selectHora.disabled = false;
     });
 
     // NUEVO FLUJO CORRECTO

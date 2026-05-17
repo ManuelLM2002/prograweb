@@ -262,6 +262,22 @@ app.get("/test-correo", async (req, res) => {
     }
 });
 
+// OBTENER HORARIOS OCUPADOS POR FECHA
+app.get("/api/horarios-ocupados", (req, res) => {
+    const fecha = req.query.fecha;
+    if (!fecha) return res.json([]);
+
+    db.query("SELECT hora FROM citas WHERE fecha = ?", [fecha], (err, results) => {
+        if (err) return res.status(500).json(err);
+        
+        // Extraemos solo la hora y los minutos (ej. de "10:00:00" a "10:00")
+        const horasOcupadas = results.map(cita => {
+            return String(cita.hora).substring(0, 5);
+        });
+        
+        res.json(horasOcupadas);
+    });
+});
 
 // CITAS (Enviar confirmación por correo)
 app.post("/citas", (req, res) => {
