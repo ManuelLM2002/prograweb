@@ -117,7 +117,7 @@
                     <tr>
                         <td>${cita.especialidad}</td>
                        <td>
-                            ${new Date(cita.fecha).toLocaleDateString('es-MX', {
+                            ${new Date(c.fecha + "T00:00:00").toLocaleDateString('es-MX', {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric'
