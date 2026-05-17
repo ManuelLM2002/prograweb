@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,9 +74,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Hora</label>
-                                <select class="form-select form-select-lg" id="hora" required disabled>
-                                    <option value="" disabled selected>Primero elige una fecha...</option>
-                                </select>
+                                <input type="time" class="form-control form-control-lg" id="hora" required>
                             </div>
                         </div>
 
@@ -132,52 +131,6 @@
         localStorage.clear();
         window.location.href = "/login";
     }
-
-    // ==========================================
-    // RESTRICCIÓN DE FECHAS Y HORARIOS
-    // ==========================================
-    
-    const inputFecha = document.getElementById("fecha");
-    const selectHora = document.getElementById("hora");
-
-    // 1. Bloquear Hoy y Mañana
-    const fechaMinima = new Date();
-    fechaMinima.setDate(fechaMinima.getDate() + 2); // Sumamos 2 días
-    const minFormat = fechaMinima.toISOString().split("T")[0]; // Formato YYYY-MM-DD
-    inputFecha.setAttribute("min", minFormat);
-
-    // 2. Generar horarios dinámicos al escoger un día
-    inputFecha.addEventListener("change", function() {
-        selectHora.disabled = false;
-        selectHora.innerHTML = '<option value="" disabled selected>Selecciona una hora...</option>';
-
-        // Usamos T00:00:00 para evitar que el navegador cambie el día por la zona horaria
-        const fechaSeleccionada = new Date(this.value + "T00:00:00");
-        const diaSemana = fechaSeleccionada.getDay(); // 0 = Domingo, 1 = Lunes... 6 = Sábado
-
-        let horaInicio, horaFin;
-
-        if (diaSemana === 0 || diaSemana === 6) {
-            // Sábados (6) y Domingos (0)
-            horaInicio = 10;
-            horaFin = 17;
-        } else {
-            // Lunes a Viernes (1-5)
-            horaInicio = 9;
-            horaFin = 22;
-        }
-
-        // Crear los bloques de 30 minutos
-        for (let h = horaInicio; h < horaFin; h++) {
-            let horaString = h.toString().padStart(2, '0');
-            selectHora.innerHTML += `<option value="${horaString}:00">${horaString}:00</option>`;
-            selectHora.innerHTML += `<option value="${horaString}:30">${horaString}:30</option>`;
-        }
-        
-        // Agregar la hora de cierre exacta
-        let cierreString = horaFin.toString().padStart(2, '0');
-        selectHora.innerHTML += `<option value="${cierreString}:00">${cierreString}:00</option>`;
-    });
 
     // NUEVO FLUJO CORRECTO
     document.getElementById("form-agendar").addEventListener("submit", function(e) {
