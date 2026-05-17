@@ -122,6 +122,7 @@
                     <td>${c.especialidad}</td>
                    <td>
                         ${new Date(c.fecha + "T00:00:00").toLocaleDateString('es-MX', {
+                        timeZone: 'UTC',
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
