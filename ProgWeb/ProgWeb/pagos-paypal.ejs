@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Pago de Cita</title>
-
+    <link rel="icon" type="image/avif" href="/img/logo.avif">
     <!-- PAYPAL SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=AY9FVZLT7BP0qRIGRBStw0wQnfR1v0sR0ZO9qhTfUTJCQb3nf8Cbz7750piRN1-96ZN0Rz4oXPYLyzrn&currency=MXN"></script>
 
@@ -82,7 +82,7 @@ if (!cita) {
 document.getElementById("esp").textContent = cita.especialidad;
 
 document.getElementById("fecha").textContent =
-    new Date(cita.fecha).toLocaleDateString('es-MX', {
+    new Date(cita.fecha + "T00:00:00").toLocaleDateString('es-MX', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
