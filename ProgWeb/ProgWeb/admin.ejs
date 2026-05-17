@@ -101,12 +101,8 @@
 
         /* CITAS */
         async function cargarCitas() {
-            console.log("Cargando citas...");
-            const res = await fetch(API + "/citas");
-            console.log(res);
-            const data = await res.json();
-            console.log(data);
             try {
+                console.log("Cargando citas...");
                 const res = await fetch(API + "/citas");
                 const data = await res.json();
 
@@ -114,34 +110,54 @@
                 if (!tabla) return;
 
                 tabla.innerHTML = "";
-
                 data.forEach(c => {
+                    
+                    // 1. VALIDACIÓN ULTRA SEGURA DE FECHA
+                    let fechaFormateada = "Sin fecha";
+                    
+                    if (c.fecha) {
+                        const fechaStr = String(c.fecha); 
+                        // Cortamos la "T" para limpiarla de la zona horaria de la BD
+                        const fechaLimpia = fechaStr.includes('T') ? fechaStr.split('T')[0] : fechaStr;
+                        const objetoFecha = new Date(fechaLimpia + "T00:00:00");
+                        
+                        // Si la fecha es válida, la formateamos
+                        if (!isNaN(objetoFecha)) {
+                            fechaFormateada = objetoFecha.toLocaleDateString('es-MX', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+                        }
+                    }
+
+                    // 2. VALIDACIÓN SEGURA DE HORA
+                    let horaFormateada = "Sin hora";
+                    if (c.hora) {
+                        const objetoHora = new Date(`1970-01-01T${c.hora}`);
+                        if (!isNaN(objetoHora)) {
+                            horaFormateada = objetoHora.toLocaleTimeString([], {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        }
+                    }
+
+                    // 3. INYECTAMOS LA FILA EN LA TABLA
                     tabla.innerHTML += `
                 <tr>
                     <td>${c.id}</td>
                     <td>${c.especialidad}</td>
-                   <td>
-                        ${new Date(c.fecha).toLocaleDateString('es-MX', {
-                            timeZone: 'UTC', // <-- El botón mágico para fijar el día correcto
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        })}
-                    <td>${new Date(`1970-01-01T${c.hora}`).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                            })}
-                    </td>
-                    
+                    <td>${fechaFormateada}</td>
+                    <td>${horaFormateada}</td>
                     <td>${c.usuario}</td>
                     <td>${c.estado}</td>
                     <td>
                         <button class="btn btn-danger btn-sm" onclick="eliminarCita(${c.id})">X</button>
                     </td>
                 </tr>
-            `;
+                `;
                 });
-
             } catch (err) {
                 console.error("Error cargarCitas:", err);
             }
